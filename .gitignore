@@ -1,2 +1,3 @@
 *.vsidx
 /src/LA/bin
+/src/LA/obj

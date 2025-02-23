@@ -1,5 +1,6 @@
 ﻿
 
+using System.Reflection;
 using Type = double;
 namespace LA
 {
@@ -69,10 +70,13 @@ namespace LA
             {
                 Console.WriteLine($"the new center is : {c}");
                 Type center = c;
-                TaylorPolynomial poly = new(25, c, cos);
+                TaylorPolynomial poly = new(15, c, cos);
                 for (float i = c - 1; i <= c + 1; i += 0.1f)
                 {
-                    Console.WriteLine($"actual : {cos(i, 0)} , approx : {poly.At(i)}");
+                    Type actual = cos(i, 0);
+                    Type approx = poly.At(i);
+                    Console.WriteLine($"actual : {actual} , approx : {approx}");
+                    Console.WriteLine(AbsoluteError(actual, approx));
                 }
             }
         }
