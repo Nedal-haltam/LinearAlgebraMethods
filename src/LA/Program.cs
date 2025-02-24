@@ -1,5 +1,6 @@
 ﻿
 
+using System.Globalization;
 using System.Reflection;
 using Type = double;
 namespace LA
@@ -80,9 +81,40 @@ namespace LA
                 }
             }
         }
+
+        static Type Bisection(Func<Type, int, Type> function, Type a, Type b, int iterations)
+        {
+            Type a1 = a;
+            Type b1 = b;
+            Type func_a1 = function(a1, 0);
+            Type func_b1 = function(b1, 0);
+            if (func_a1 == 0)
+                return a1;
+            if (func_b1 == 0)
+                return b1;
+            if (func_a1 * func_b1 > 0)
+                throw new Exception("Bisection is not applicabla");
+            Type c = 0;
+            while (iterations-- > 0)
+            {
+                func_a1 = function(a1, 0);
+                func_b1 = function(b1, 0);
+                c = (a1 + b1) / (Type)2;
+                Type func_c = function(c, 0);
+                if (func_a1 * func_c < 0)
+                    b1 = c;
+                else if (func_b1 * func_c < 0)
+                    a1 = c;
+            }
+            return c;
+        }
+        // TODO: find a way to take the derivative of a function symbolically
+        // or just stick to the numerical approach (diff(xs) / dx)
         static void Main(string[] args)
         {
-            TaylorCosineTest();
+            Type c = Bisection(cos, 0.1, 2.5, 20);
+            Console.WriteLine($"actual : {Math.PI / 2} , approx : {c}");
+            Console.WriteLine($"absolute error : {AbsoluteError(Math.PI / 2, c)}");
         }
     }
 }
