@@ -1,6 +1,7 @@
 ﻿
 
 using System.Globalization;
+using System.Net.Http.Headers;
 using System.Reflection;
 using Type = double;
 namespace LA
@@ -82,7 +83,7 @@ namespace LA
             }
         }
 
-        static Type Bisection(Func<Type, int, Type> function, Type a, Type b, int iterations)
+        static Type Bisection(Func<Type, int, Type> function, Type a, Type b, int iterations, Type error = 0)
         {
             Type a1 = a;
             Type b1 = b;
@@ -95,6 +96,10 @@ namespace LA
             if (func_a1 * func_b1 > 0)
                 throw new Exception("Bisection is not applicabla");
             Type c = 0;
+            if (error != 0)
+            {
+                iterations = (int)(Math.Log2((b1 - a1) / error)) + 1;
+            }
             while (iterations-- > 0)
             {
                 func_a1 = function(a1, 0);
@@ -108,13 +113,25 @@ namespace LA
             }
             return c;
         }
+        static void BisecitonTest()
+        {
+            Type a = 0.1;
+            Type b = 2.5;
+            int iterations = 10;
+            Type c = Bisection(cos, a, b, iterations);
+            Console.WriteLine("without specifying an error");
+            Console.WriteLine($"actual : {Math.PI / 2} , approx : {c}");
+            Console.WriteLine($"absolute error : {AbsoluteError(Math.PI / 2, c)}");
+            c = Bisection(cos, a, b, iterations, 0.001);
+            Console.WriteLine("with specified error of 0.001");
+            Console.WriteLine($"actual : {Math.PI / 2} , approx : {c}");
+            Console.WriteLine($"absolute error : {AbsoluteError(Math.PI / 2, c)}");
+        }
         // TODO: find a way to take the derivative of a function symbolically
         // or just stick to the numerical approach (diff(xs) / dx)
         static void Main(string[] args)
         {
-            Type c = Bisection(cos, 0.1, 2.5, 20);
-            Console.WriteLine($"actual : {Math.PI / 2} , approx : {c}");
-            Console.WriteLine($"absolute error : {AbsoluteError(Math.PI / 2, c)}");
+            BisecitonTest();
         }
     }
 }
