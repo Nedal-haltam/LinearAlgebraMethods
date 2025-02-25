@@ -94,7 +94,7 @@ namespace LA
             if (func_b1 == 0)
                 return b1;
             if (func_a1 * func_b1 > 0)
-                throw new Exception("Bisection is not applicabla");
+                throw new Exception("Bisection is not applicable");
             Type c = 0;
             if (error != 0)
             {
@@ -102,9 +102,9 @@ namespace LA
             }
             while (iterations-- > 0)
             {
+                c = (a1 + b1) / (Type)2;
                 func_a1 = function(a1, 0);
                 func_b1 = function(b1, 0);
-                c = (a1 + b1) / (Type)2;
                 Type func_c = function(c, 0);
                 if (func_a1 * func_c < 0)
                     b1 = c;
@@ -139,7 +139,7 @@ namespace LA
         }
         static void TestRootNewtonMethod()
         {
-            Console.WriteLine($"actual : {Math.PI / 2} , approx : {RootNewtonMethod(1, cos, 10)}");
+            Console.WriteLine($"actual : {Math.PI / 2} , approx : {RootNewtonMethod(1, cos, 3)}");
         }
         static Type RootSecantMethod(Type initial_x0, Type initial_x1, Func<Type, int, Type> function, int iterations)
         {
@@ -159,12 +159,52 @@ namespace LA
         {
             Console.WriteLine($"actual : {Math.PI / 2} , approx : {RootSecantMethod(0.8, 1, cos, 3)}");
         }
+        static Type RootFalsePositionMethod(Type initial_x0, Type initial_x1, Func<Type, int, Type> function, int iterations)
+        {
+            Type x1 = initial_x0;
+            Type x2 = initial_x1;
+            Type final = 0;
+            Type func_x1 = function(x1, 0);
+            Type func_x2 = function(x2, 0);
+            if (func_x1 == 0)
+                return x1;
+            if (func_x2 == 0)
+                return x2;
+            if (func_x1 * func_x2 > 0)
+                throw new Exception("false position method is not applicable");
+            while(iterations-- > 0)
+            {
+                Type gprime = (function(x2, 0) - function(x1, 0));
+                Type x = x2 - ((function(x2, 0) * (x2 - x1)) / (gprime));
+                Type func_x = function(x, 0);
+                func_x1 = function(x1, 0);
+                func_x2 = function(x2, 0);
+                if (func_x1 * func_x < 0)
+                {
+                    x2 = x;
+                    final = x2;
+                }
+                else if (func_x2 * func_x < 0)
+                {
+                    x1 = x;
+                    final = x1;
+                }
+            }
+            return final;
+        }
+        static void TestRootFalsePositionMethod()
+        {
+            Console.WriteLine($"actual : {Math.PI / 2} , approx : {RootFalsePositionMethod(1, 2, cos, 3)}");
+        }
+
         // TODO:
         // - find a way to take the derivative of a function symbolically or just stick to the numerical approach (diff(xs) / dx)
         // - rename it to Lalib
         static void Main(string[] args)
         {
+            TestRootNewtonMethod();
             TestRootSecantMethod();
+            TestRootFalsePositionMethod();
         }
     }
 }
