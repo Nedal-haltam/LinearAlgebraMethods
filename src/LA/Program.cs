@@ -66,7 +66,7 @@ namespace LA
                 return Math.Sin(x);
             throw new Exception("UNREACHABLE");
         }
-        static void TaylorCosineTest()
+        static void TestTaylorCosine()
         {
             for (int c = 0; c < 5; c++)
             {
@@ -83,7 +83,7 @@ namespace LA
             }
         }
 
-        static Type Bisection(Func<Type, int, Type> function, Type a, Type b, int iterations, Type error = 0)
+        static Type RootBisection(Func<Type, int, Type> function, Type a, Type b, int iterations, Type error = 0)
         {
             Type a1 = a;
             Type b1 = b;
@@ -113,25 +113,40 @@ namespace LA
             }
             return c;
         }
-        static void BisecitonTest()
+        static void TestRootBiseciton()
         {
             Type a = 0.1;
             Type b = 2.5;
             int iterations = 10;
-            Type c = Bisection(cos, a, b, iterations);
+            Type c = RootBisection(cos, a, b, iterations);
             Console.WriteLine("without specifying an error");
             Console.WriteLine($"actual : {Math.PI / 2} , approx : {c}");
             Console.WriteLine($"absolute error : {AbsoluteError(Math.PI / 2, c)}");
-            c = Bisection(cos, a, b, iterations, 0.001);
+            c = RootBisection(cos, a, b, iterations, 0.001);
             Console.WriteLine("with specified error of 0.001");
             Console.WriteLine($"actual : {Math.PI / 2} , approx : {c}");
             Console.WriteLine($"absolute error : {AbsoluteError(Math.PI / 2, c)}");
         }
-        // TODO: find a way to take the derivative of a function symbolically
-        // or just stick to the numerical approach (diff(xs) / dx)
+        static Type RootNewtonMethod(Type initial_x, Func<Type, int, Type> function, int iterations)
+        {
+            // x(n+1) = x(n) - (g(x(n)) / g'(x(n))
+            Type x = initial_x;
+            while (iterations-- > 0)
+            {
+                x = x - (function(x, 0) / function(x, 1));
+            }
+            return x;
+        }
+        static void TestRootNewtonMethod()
+        {
+            Console.WriteLine($"actual : {Math.PI / 2} , approx : {RootNewtonMethod(1, cos, 10)}");
+        }
+        // TODO:
+        // - find a way to take the derivative of a function symbolically or just stick to the numerical approach (diff(xs) / dx)
+        // - rename it to Lalib
         static void Main(string[] args)
         {
-            BisecitonTest();
+            
         }
     }
 }
