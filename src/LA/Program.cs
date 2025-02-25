@@ -127,10 +127,10 @@ namespace LA
             Console.WriteLine($"actual : {Math.PI / 2} , approx : {c}");
             Console.WriteLine($"absolute error : {AbsoluteError(Math.PI / 2, c)}");
         }
-        static Type RootNewtonMethod(Type initial_x, Func<Type, int, Type> function, int iterations)
+        static Type RootNewtonMethod(Type initial_x0, Func<Type, int, Type> function, int iterations)
         {
-            // x(n+1) = x(n) - (g(x(n)) / g'(x(n))
-            Type x = initial_x;
+            // x(n+1) = x(n) - (g(x(n)) / g'(x(n)))
+            Type x = initial_x0;
             while (iterations-- > 0)
             {
                 x = x - (function(x, 0) / function(x, 1));
@@ -141,12 +141,30 @@ namespace LA
         {
             Console.WriteLine($"actual : {Math.PI / 2} , approx : {RootNewtonMethod(1, cos, 10)}");
         }
+        static Type RootSecantMethod(Type initial_x0, Type initial_x1, Func<Type, int, Type> function, int iterations)
+        {
+            // x(n+1) = x(n) - ( g(x(n)) / ( (g(x(n)) - g(x(n-1))) / (x(n) - x(n-1)) ) )
+            Type x1 = initial_x0;
+            Type x2 = initial_x1;
+            while (iterations-- > 0)
+            {
+                Type gprime = (function(x2, 0) - function(x1, 0));
+                Type x = x2 - ((function(x2, 0) * (x2 - x1)) / (gprime));
+                x1 = x2;
+                x2 = x;
+            }
+            return x2;
+        }
+        static void TestRootSecantMethod()
+        {
+            Console.WriteLine($"actual : {Math.PI / 2} , approx : {RootSecantMethod(0.8, 1, cos, 3)}");
+        }
         // TODO:
         // - find a way to take the derivative of a function symbolically or just stick to the numerical approach (diff(xs) / dx)
         // - rename it to Lalib
         static void Main(string[] args)
         {
-            
+            TestRootSecantMethod();
         }
     }
 }
