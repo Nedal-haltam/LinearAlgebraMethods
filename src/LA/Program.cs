@@ -212,6 +212,70 @@ namespace LALib
             public U x;
             public V y;
         }
-
+        public static class InterpolatingPolynomials
+        {
+            public abstract class InterpolatingPolynomial
+            {
+                public List<Pair<Type, Type>> points = [];
+                public abstract Type At(Type x);
+            }
+            public class Lagrange : InterpolatingPolynomial
+            {
+                public List<Type> denominators;
+                public Lagrange(List<Pair<Type, Type>> pairs)
+                {
+                    points = pairs;
+                    denominators = [];
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        Type den = 1;
+                        for (int j = 0; j < points.Count; j++)
+                        {
+                            if (i == j)
+                                continue;
+                            den *= points[i].x - points[j].x;
+                        }
+                        denominators.Add(den);
+                    }
+                }
+                public override Type At(Type x)
+                {
+                    Type ret = 0;
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        Type num = 1;
+                        for (int j = 0; j < points.Count; j++)
+                        {
+                            if (i == j)
+                                continue;
+                            num *= x - points[j].x;
+                        }
+                        ret += num / denominators[i] * points[i].y;
+                    }
+                    return ret;
+                }
+            }
+            public static void TestLagrange()
+            {
+                List<Pair<Type, Type>> pts = [];
+                for (int i = -2; i <= 2; i++)
+                {
+                    pts.Add(new() { x = i, y = cos(i, 0) });
+                }
+                Lagrange lagrange = new(pts);
+                Type x = 0.5;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
+                x = 0.75;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
+                x = 1.5;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
+                x = 1.9;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
+                x = 1;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
+                x = 2;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
+            }
+        }
     }
 }
