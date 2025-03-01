@@ -322,6 +322,56 @@ namespace LALib
                 x = 2;
                 Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
             }
+            public class NewtonsDDM : InterpolatingPolynomial
+            {
+                public NewtonsDDM(List<Pair<Type, Type>> pairs)
+                {
+                    points = pairs;
+                }
+                public Type KthDD(int k, int i)
+                {
+                    if (k == 0)
+                    {
+                        return points[i].y;
+                    }
+                    return (KthDD(k - 1, i + 1) - KthDD(k - 1, i)) / (points[i + k].x - points[i].x);
+                }
+                public override Type At(Type x)
+                {
+                    Type ret = 0;
+                    for (int i = 0; i < points.Count; i++)
+                    {
+                        Type factor = 1;
+                        for (int j = 0; j < i; j++)
+                        {
+                            factor *= x - points[j].x;
+                        }
+                        ret += KthDD(i, 0) * factor;
+                    }
+                    return ret;
+                }
+            }
+            public static void TestNewtonsDDM()
+            {
+                List<Pair<Type, Type>> pts = [];
+                for (int i = -2; i <= 2; i++)
+                {
+                    pts.Add(new() { x = i, y = cos(i, 0) });
+                }
+                InterpolatingPolynomials.NewtonsDDM newtonddm = new(pts);
+                Type x = 0.5;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
+                x = 0.75;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
+                x = 1.5;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
+                x = 1.9;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
+                x = 1;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
+                x = 2;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
+            }
         }
     }
 }
