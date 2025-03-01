@@ -6,10 +6,12 @@ namespace LA
 {
     internal class Program
     {
-        
         // TODO:
-        // - find a way to take the derivative of a function symbolically or just stick to the numerical approach (diff(xs) / dx)
-        // - integrate raylib to draw the approximations for different methods
+            //- ways to differentiate
+                //- find a way to take the derivative of a function symbolically
+                //- or stick to the numerical approach (diff(xs) / dx)
+                //- or use the numerical differentiation formulas
+            // - integrate raylib to draw the approximations for different methods, and various graphs like error, ...
         static void Main()
         {
             
@@ -373,5 +375,9 @@ namespace LALib
                 Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
             }
         }
+
+
+
+
     }
 }
