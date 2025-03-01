@@ -276,6 +276,52 @@ namespace LALib
                 x = 2;
                 Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
             }
+            public class NevillesMethod : InterpolatingPolynomial
+            {
+                public NevillesMethod(List<Pair<Type, Type>> pairs)
+                {
+                    points = pairs;
+                }
+                private Type At(Type x, int i, int j)
+                {
+                    if (j == 0)
+                    {
+                        return points[i].y;
+                    }
+                    Type foo = (x - points[i - j].x) * At(x, i, j - 1);
+                    Type bar = (x - points[i].x) * At(x, i - 1, j - 1);
+                    return (foo - bar) / (points[i].x - points[i - j].x);
+                }
+                public override Type At(Type x)
+                {
+                    int i = points.Count - 1;
+                    int j = points.Count - 1;
+                    Type foo = (x - points[i - j].x) * At(x, i, j - 1);
+                    Type bar = (x - points[i].x) * At(x, i - 1, j - 1);
+                    return (foo - bar) / (points[i].x - points[i - j].x);
+                }
+            }
+            public static void TestNevillesMethod()
+            {
+                List<Pair<Type, Type>> pts = [];
+                for (int i = -2; i <= 2; i++)
+                {
+                    pts.Add(new() { x = i, y = cos(i, 0) });
+                }
+                InterpolatingPolynomials.NevillesMethod nevilles = new(pts);
+                Type x = 0.5;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
+                x = 0.75;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
+                x = 1.5;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
+                x = 1.9;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
+                x = 1;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
+                x = 2;
+                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
+            }
         }
     }
 }
