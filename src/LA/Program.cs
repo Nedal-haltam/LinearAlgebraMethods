@@ -15,7 +15,8 @@ namespace LA
             // - integrate raylib to draw the approximations for different methods, and various graphs like error, ...
         static void Main()
         {
-            
+            NumericalDifferentiation.TestFirstDerivative();
+            NumericalDifferentiation.TestSecondDerivative();
         }
     }
 }
@@ -408,6 +409,21 @@ namespace LALib
                 Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeBackWard(xlnx, pts[2].x, 0.2));
 
                 Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeBackWard(xlnx, pts[3].x, 0.2));
+            }
+            public static Type ThreePointsSecondDerivativeCentral(Func<Type, int, Type>function, Type x, Type h)
+            {
+                return ((function(x - h, 0)) - 2 * (function(x, 0)) + (function(x + h, 0))) / (h * h);
+            }
+            public static void TestSecondDerivative()
+            {
+                List<Pair<Type, Type>> pts = [];
+                pts.Add(new() { x = 0.7, y = cos(0.7, 0) });
+                pts.Add(new() { x = 0.8, y = cos(0.8, 0) });
+                pts.Add(new() { x = 0.9, y = cos(0.9, 0) });
+
+                Type approx = NumericalDifferentiation.ThreePointsSecondDerivativeCentral(cos, pts[1].x, 0.1);
+                Type actual = cos(0.8, 2);
+                Console.WriteLine($"actual : {actual} , approx : {approx}");
             }
         }
 
