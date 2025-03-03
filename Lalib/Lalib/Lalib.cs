@@ -1,38 +1,39 @@
 ﻿
 using System.Security.Cryptography;
-using Type = double;
+
 using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
 
 
-namespace LALib 
+namespace LALib
 {
+    using Type = float;
     public static class Lalib
     {
         public static Type Factorial(int value) => (Enumerable.Range(1, value).Aggregate(1, (p, item) => p * item));
-        public const Type eps = 1e-6D;
+        public const Type eps = 1e-6F;
         public static Type cos(Type x, int NthDerivative)
         {
             int which = NthDerivative % 4;
             if (which == 0)
-                return Math.Cos(x);
+                return MathF.Cos(x);
             else if (which == 1)
-                return -Math.Sin(x);
+                return -MathF.Sin(x);
             else if (which == 2)
-                return -Math.Cos(x);
+                return -MathF.Cos(x);
             else if (which == 3)
-                return Math.Sin(x);
+                return MathF.Sin(x);
             throw new Exception("UNREACHABLE");
         }
         public static Type AbsoluteError(Type x, Type x_star)
         {
-            return Math.Abs(x - x_star);
+            return MathF.Abs(x - x_star);
         }
         public static Type RelativeError(Type x, Type x_star)
         {
-            if (Math.Abs(x) < eps)
+            if (MathF.Abs(x) < eps)
                 throw new Exception($"Value too small : {x}");
-            return AbsoluteError(x, x_star) / Math.Abs(x);
+            return AbsoluteError(x, x_star) / MathF.Abs(x);
         }
         public class TaylorPolynomial
         {
@@ -54,13 +55,13 @@ namespace LALib
                 Type ret = 0;
                 for (int i = 0; i < coefficients.Count; i++)
                 {
-                    ret += coefficients[i] * Math.Pow(x - center, i);
+                    ret += coefficients[i] * MathF.Pow(x - center, i);
                 }
                 return ret;
             }
             public Type Error(Type x)
             {
-                return Math.Pow(x - center, degree + 1) / Factorial(degree + 1);
+                return MathF.Pow(x - center, degree + 1) / Factorial(degree + 1);
             }
         }
         public static class Root
@@ -80,7 +81,7 @@ namespace LALib
                 Type c = 0;
                 if (error != 0)
                 {
-                    iterations = (int)(Math.Log2((b1 - a1) / error)) + 1;
+                    iterations = (int)(MathF.Log2((b1 - a1) / error)) + 1;
                 }
                 while (iterations-- > 0)
                 {
@@ -155,6 +156,11 @@ namespace LALib
         }
         public struct Pair<U, V>
         {
+            public Pair(U x, V y)
+            {
+                this.x = x;
+                this.y = y;
+            }
             public U x;
             public V y;
         }
@@ -270,9 +276,9 @@ namespace LALib
             public static void VisualizeBasicMethod()
             {
                 List<Type> function = [];
-                Type dx = 0.1;
+                Type dx = 0.1F;
                 int c = 1;
-                for (Type i = 0; i < 2 * Math.PI; i += dx)
+                for (Type i = 0; i < 2 * MathF.PI; i += dx)
                 {
                     function.Add(cos(2*i, 0)); 
                 }
@@ -303,7 +309,7 @@ namespace LALib
             {
                 return ((function(x - 2 * h, 0)) - 4 * (function(x - 1 * h, 0)) + 3 * (function(x, 0))) / (2 * h);
             }
-            public static Type xlnx(Type x, int sdf) => x * Math.Log(x);
+            public static Type xlnx(Type x, int sdf) => x * MathF.Log(x);
             public static Type ThreePointsSecondDerivativeCentral(Func<Type, int, Type> function, Type x, Type h)
             {
                 return ((function(x - h, 0)) - 2 * (function(x, 0)) + (function(x + h, 0))) / (h * h);
@@ -314,7 +320,7 @@ namespace LALib
         {
             public static Type TrapezoidalRule(List<Pair<Type, Type>> points, Type h)
             {
-                return (points[0].y + points[1].y) * (h / 2.0);
+                return (points[0].y + points[1].y) * (h / 2.0F);
             }
             public static Type CompositeTrapezoidalRule(Func<Type, int, Type> function, Type a, Type b, Type h)
             {
@@ -324,7 +330,7 @@ namespace LALib
                 {
                     term += function(a + i * h, 0);
                 }
-                return (function(a, 0) + function(b, 0) + 2 * term) * (h / 2.0);
+                return (function(a, 0) + function(b, 0) + 2.0F * term) * (h / 2.0F);
             }
         }
     }
