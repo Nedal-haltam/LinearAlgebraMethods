@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
 
 
-namespace LALib
+namespace LALib 
 {
     public static class Lalib
     {

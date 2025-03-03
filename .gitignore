@@ -4,3 +4,5 @@ Application/src/LA/.vs/LA/v17/Browse.VC.opendb
 /Application/src/LA/bin
 /Application/src/LA/.vs
 /Lalib/Lalib/.vs
+/Lalib/Lalib/obj
+/Lalib/Lalib/bin
