@@ -274,7 +274,7 @@ namespace LALib
                 int c = 1;
                 for (Type i = 0; i < 2 * Math.PI; i += dx)
                 {
-                    function.Add(cos(2*i, 0));
+                    function.Add(cos(2*i, 0)); 
                 }
                 List<Type> dir_function = NumericalDifferentiation.BasicMethod(function, dx);
                 for (int i = 0; i < function.Count / c; i++)

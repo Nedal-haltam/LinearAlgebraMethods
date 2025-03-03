@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Lalib")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ac1396cab7f8106c0ceeea5c9c1c7b03059bc66")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c6adae01da7c50c4fbd4130ea824362dcc3f9585")]
 [assembly: System.Reflection.AssemblyProductAttribute("Lalib")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Lalib")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

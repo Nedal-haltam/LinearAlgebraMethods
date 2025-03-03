@@ -13,7 +13,7 @@ namespace LA
         // TODO:
         // - integrate raylib to draw the approximations for different methods, and various graphs like error, ...
         static Color BACKGROUND_COLOR = new() { A = 255, R = 0x18, G = 0x18, B = 0x18 };
-        static void Main()
+        static void Main() 
         {
             //LALib.Lalib.NumericalDifferentiation.VisualizeBasicMethod();
             int WIDTH = 800;
