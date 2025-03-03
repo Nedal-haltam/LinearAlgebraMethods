@@ -3,6 +3,7 @@ using static LALib.Lalib;
 using System.Security.Cryptography;
 using Type = double;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 namespace LA
 {
     internal class Program
@@ -15,7 +16,7 @@ namespace LA
             // - integrate raylib to draw the approximations for different methods, and various graphs like error, ...
         static void Main()
         {
-            NumericalIntegration.TestCompositeTrapezoidalRule();
+
         }
     }
 }
@@ -78,22 +79,6 @@ namespace LALib
                 return Math.Pow(x - center, degree + 1) / Factorial(degree + 1);
             }
         }
-        public static void TestTaylorCosine()
-        {
-            for (int c = 0; c < 5; c++)
-            {
-                Console.WriteLine($"the new center is : {c}");
-                Type center = c;
-                TaylorPolynomial poly = new(15, c, cos);
-                for (float i = c - 1; i <= c + 1; i += 0.1f)
-                {
-                    Type actual = cos(i, 0);
-                    Type approx = poly.At(i);
-                    Console.WriteLine($"actual : {actual} , approx : {approx}");
-                    Console.WriteLine(AbsoluteError(actual, approx));
-                }
-            }
-        }
         public static class Root
         {
             public static Type Bisection(Func<Type, int, Type> function, Type a, Type b, int iterations, Type error = 0)
@@ -126,20 +111,6 @@ namespace LALib
                 }
                 return c;
             }
-            public static void TestBiseciton()
-            {
-                Type a = 0.1;
-                Type b = 2.5;
-                int iterations = 10;
-                Type c = Bisection(cos, a, b, iterations);
-                Console.WriteLine("without specifying an error");
-                Console.WriteLine($"actual : {Math.PI / 2} , approx : {c}");
-                Console.WriteLine($"absolute error : {AbsoluteError(Math.PI / 2, c)}");
-                c = Bisection(cos, a, b, iterations, 0.001);
-                Console.WriteLine("with specified error of 0.001");
-                Console.WriteLine($"actual : {Math.PI / 2} , approx : {c}");
-                Console.WriteLine($"absolute error : {AbsoluteError(Math.PI / 2, c)}");
-            }
             public static Type NewtonMethod(Type initial_x0, Func<Type, int, Type> function, int iterations)
             {
                 // x(n+1) = x(n) - (g(x(n)) / g'(x(n)))
@@ -149,10 +120,6 @@ namespace LALib
                     x = x - (function(x, 0) / function(x, 1));
                 }
                 return x;
-            }
-            public static void TestNewtonMethod()
-            {
-                Console.WriteLine($"actual : {Math.PI / 2} , approx : {NewtonMethod(1, cos, 3)}");
             }
             public static Type SecantMethod(Type initial_x0, Type initial_x1, Func<Type, int, Type> function, int iterations)
             {
@@ -167,10 +134,6 @@ namespace LALib
                     x2 = x;
                 }
                 return x2;
-            }
-            public static void TestSecantMethod()
-            {
-                Console.WriteLine($"actual : {Math.PI / 2} , approx : {SecantMethod(0.8, 1, cos, 3)}");
             }
             public static Type FalsePositionMethod(Type initial_x0, Type initial_x1, Func<Type, int, Type> function, int iterations)
             {
@@ -204,10 +167,6 @@ namespace LALib
                     }
                 }
                 return final;
-            }
-            public static void TestFalsePositionMethod()
-            {
-                Console.WriteLine($"actual : {Math.PI / 2} , approx : {FalsePositionMethod(1, 2, cos, 3)}");
             }
         }
         public struct Pair<U, V>
@@ -258,27 +217,6 @@ namespace LALib
                     return ret;
                 }
             }
-            public static void TestLagrange()
-            {
-                List<Pair<Type, Type>> pts = [];
-                for (int i = -2; i <= 2; i++)
-                {
-                    pts.Add(new() { x = i, y = cos(i, 0) });
-                }
-                Lagrange lagrange = new(pts);
-                Type x = 0.5;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
-                x = 0.75;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
-                x = 1.5;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
-                x = 1.9;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
-                x = 1;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
-                x = 2;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {lagrange.At(x)}");
-            }
             public class NevillesMethod : InterpolatingPolynomial
             {
                 public NevillesMethod(List<Pair<Type, Type>> pairs)
@@ -303,27 +241,6 @@ namespace LALib
                     Type bar = (x - points[i].x) * At(x, i - 1, j - 1);
                     return (foo - bar) / (points[i].x - points[i - j].x);
                 }
-            }
-            public static void TestNevillesMethod()
-            {
-                List<Pair<Type, Type>> pts = [];
-                for (int i = -2; i <= 2; i++)
-                {
-                    pts.Add(new() { x = i, y = cos(i, 0) });
-                }
-                InterpolatingPolynomials.NevillesMethod nevilles = new(pts);
-                Type x = 0.5;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
-                x = 0.75;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
-                x = 1.5;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
-                x = 1.9;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
-                x = 1;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
-                x = 2;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {nevilles.At(x)}");
             }
             public class NewtonsDDM : InterpolatingPolynomial
             {
@@ -354,30 +271,43 @@ namespace LALib
                     return ret;
                 }
             }
-            public static void TestNewtonsDDM()
-            {
-                List<Pair<Type, Type>> pts = [];
-                for (int i = -2; i <= 2; i++)
-                {
-                    pts.Add(new() { x = i, y = cos(i, 0) });
-                }
-                InterpolatingPolynomials.NewtonsDDM newtonddm = new(pts);
-                Type x = 0.5;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
-                x = 0.75;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
-                x = 1.5;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
-                x = 1.9;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
-                x = 1;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
-                x = 2;
-                Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
-            }
         }
         public static class NumericalDifferentiation
-        {// TODO: change the interface such that we only provide the point the `h` and it figures out the rest
+        {
+            public static List<Type> BasicMethod(List<Type> function, Type dx)
+            {
+                List<Type> result = [];
+                for (int i = 0; i < function.Count - 1; i++)
+                {
+                    result.Add((function[i + 1] - function[i]) / dx);
+                }
+                return result;
+            }
+            public static void VisualizeBasicMethod()
+            {
+                List<Type> function = [];
+                Type dx = 0.05;
+                int c = 1;
+                for (Type i = 0; i < 2 * Math.PI; i += dx)
+                {
+                    function.Add(cos(i, 0));
+                }
+                List<Type> dir_function = NumericalDifferentiation.BasicMethod(function, dx);
+                for (int i = 0; i < function.Count / c; i++)
+                {
+                    for (Type j = 0; j <= 1 + function[i]; j += dx)
+                        Console.Write(" ");
+                    Console.WriteLine("*");
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+                for (int i = 0; i < dir_function.Count / c; i++)
+                {
+                    for (Type j = 0; j <= 1 + dir_function[i]; j += dx)
+                        Console.Write(" ");
+                    Console.WriteLine("*");
+                }
+            }
             public static Type ThreePointsFirstDerivativeForward(Func<Type, int, Type>function, Type x, Type h)
             {
                 return (-3 * (function(x, 0)) + 4 * (function(x + h, 0)) - (function(x + 2 * h, 0))) / (2 * h);
@@ -391,38 +321,9 @@ namespace LALib
                 return ((function(x - 2 * h, 0)) - 4 * (function(x - 1 * h, 0)) + 3 * (function(x, 0))) / (2 * h);
             }
             public static Type xlnx(Type x, int sdf) => x * Math.Log(x);
-            public static void TestFirstDerivative()
-            {
-                List<Pair<Type, Type>> pts = [];
-                pts.Add(new() { x = 8.1, y = 16.94410 });
-                pts.Add(new() { x = 8.3, y = 17.56492 });
-                pts.Add(new() { x = 8.5, y = 18.19056 });
-                pts.Add(new() { x = 8.7, y = 18.82091 });
-                // these were check from the lectures
-                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeForward(xlnx, pts[0].x, 0.2));
-
-                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeForward(xlnx, pts[1].x, 0.2));
-                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeCentral(xlnx, pts[1].x, 0.2));
-
-                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeCentral(xlnx, pts[2].x, 0.2));
-                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeBackWard(xlnx, pts[2].x, 0.2));
-
-                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeBackWard(xlnx, pts[3].x, 0.2));
-            }
             public static Type ThreePointsSecondDerivativeCentral(Func<Type, int, Type>function, Type x, Type h)
             {
                 return ((function(x - h, 0)) - 2 * (function(x, 0)) + (function(x + h, 0))) / (h * h);
-            }
-            public static void TestSecondDerivative()
-            {
-                List<Pair<Type, Type>> pts = [];
-                pts.Add(new() { x = 0.7, y = cos(0.7, 0) });
-                pts.Add(new() { x = 0.8, y = cos(0.8, 0) });
-                pts.Add(new() { x = 0.9, y = cos(0.9, 0) });
-
-                Type approx = NumericalDifferentiation.ThreePointsSecondDerivativeCentral(cos, pts[1].x, 0.1);
-                Type actual = cos(0.8, 2);
-                Console.WriteLine($"actual : {actual} , approx : {approx}");
             }
         }
 
@@ -431,16 +332,6 @@ namespace LALib
             public static Type TrapezoidalRule(List<Pair<Type, Type>> points, Type h)
             {
                 return (points[0].y + points[1].y) * (h / 2.0);
-            }
-            public static void TestTrapezoidalRule()
-            {
-                List<Pair<Type, Type>> pts = [];
-                pts.Add(new() { x = 1.0, y = Math.Sqrt(1 + Math.Pow(1.0, 2))});
-                pts.Add(new() { x = 1.5, y = Math.Sqrt(1 + Math.Pow(1.5, 2))});
-
-                Type approx = NumericalIntegration.TrapezoidalRule(pts, pts[1].x - pts[0].x);
-
-                Console.WriteLine($"approx : {approx}");
             }
             public static Type CompositeTrapezoidalRule(Func<Type, int, Type> function, Type a, Type b, Type h)
             {
@@ -451,10 +342,6 @@ namespace LALib
                     term += function(a + i * h, 0);
                 }
                 return (function(a, 0) + function(b, 0) + 2 * term) * (h / 2.0);
-            }
-            public static void TestCompositeTrapezoidalRule()
-            {
-                Console.WriteLine($"approx : {NumericalIntegration.CompositeTrapezoidalRule(cos, 1, 1.6, 0.01)}");
             }
         }
 
