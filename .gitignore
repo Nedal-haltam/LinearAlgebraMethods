@@ -1,3 +1,2 @@
 *.vsidx
-/src/LA/bin
-/src/LA/obj
+Application/src/LA/.vs/LA/v17/Browse.VC.opendb
