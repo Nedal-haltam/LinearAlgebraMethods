@@ -2,6 +2,7 @@
 using static LALib.Lalib;
 using System.Security.Cryptography;
 using Type = double;
+using System.Reflection;
 namespace LA
 {
     internal class Program
@@ -375,7 +376,62 @@ namespace LALib
                 Console.WriteLine($"actual : {cos(x, 0)}, approx : {newtonddm.At(x)}");
             }
         }
+        public static class NumericalDifferentiation
+        {// TODO: change the interface such that we only provide the point the `h` and it figures out the rest
+            public static Type ThreePointsFirstDerivativeForward(Func<Type, int, Type>function, Type x, Type h)
+            {
+                return (-3 * (function(x, 0)) + 4 * (function(x + h, 0)) - (function(x + 2 * h, 0))) / (2 * h);
+            }
+            public static Type ThreePointsFirstDerivativeCentral(Func<Type, int, Type>function, Type x, Type h)
+            {
+                return ((function(x + h, 0)) - (function(x - h, 0))) / (2 * h);
+            }
+            public static Type ThreePointsFirstDerivativeBackWard(Func<Type, int, Type>function, Type x, Type h)
+            {
+                return ((function(x - 2 * h, 0)) - 4 * (function(x - 1 * h, 0)) + 3 * (function(x, 0))) / (2 * h);
+            }
+            public static Type xlnx(Type x, int sdf) => x * Math.Log(x);
+            public static void TestFirstDerivative()
+            {
+                List<Pair<Type, Type>> pts = [];
+                pts.Add(new() { x = 8.1, y = 16.94410 });
+                pts.Add(new() { x = 8.3, y = 17.56492 });
+                pts.Add(new() { x = 8.5, y = 18.19056 });
+                pts.Add(new() { x = 8.7, y = 18.82091 });
+                // these were check from the lectures
+                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeForward(xlnx, pts[0].x, 0.2));
 
+                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeForward(xlnx, pts[1].x, 0.2));
+                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeCentral(xlnx, pts[1].x, 0.2));
+
+                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeCentral(xlnx, pts[2].x, 0.2));
+                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeBackWard(xlnx, pts[2].x, 0.2));
+
+                Console.WriteLine(NumericalDifferentiation.ThreePointsFirstDerivativeBackWard(xlnx, pts[3].x, 0.2));
+            }
+        }
+
+        public static class NumericalIntegration
+        {
+            public static Type TrapezoidalRule(List<Pair<Type, Type>> points, Type h)
+            {
+                return (points[0].y + points[1].y) * (h / 2);
+            }
+            public static void TestTrapezoidalRule()
+            {
+                List<Pair<Type, Type>> pts = [];
+                pts.Add(new() { x = 1.0, y = Math.Sqrt(1 + Math.Pow(1.0, 2))});
+                pts.Add(new() { x = 1.5, y = Math.Sqrt(1 + Math.Pow(1.5, 2))});
+
+                Type approx = NumericalIntegration.TrapezoidalRule(pts, pts[1].x - pts[0].x);
+
+                Console.WriteLine($"approx : {approx}");
+            }
+            public static Type CompositeTrapezoidalRule(Func<Type, int, Type> function, Type a, Type b, Type h)
+            {
+                throw new NotImplementedException();
+            }
+        }
 
 
 
