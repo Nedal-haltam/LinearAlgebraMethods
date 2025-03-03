@@ -15,8 +15,7 @@ namespace LA
             // - integrate raylib to draw the approximations for different methods, and various graphs like error, ...
         static void Main()
         {
-            NumericalDifferentiation.TestFirstDerivative();
-            NumericalDifferentiation.TestSecondDerivative();
+            NumericalIntegration.TestCompositeTrapezoidalRule();
         }
     }
 }
@@ -431,7 +430,7 @@ namespace LALib
         {
             public static Type TrapezoidalRule(List<Pair<Type, Type>> points, Type h)
             {
-                return (points[0].y + points[1].y) * (h / 2);
+                return (points[0].y + points[1].y) * (h / 2.0);
             }
             public static void TestTrapezoidalRule()
             {
@@ -445,7 +444,17 @@ namespace LALib
             }
             public static Type CompositeTrapezoidalRule(Func<Type, int, Type> function, Type a, Type b, Type h)
             {
-                throw new NotImplementedException();
+                Type term = 0;
+                int n = (int)((b - a) / h);
+                for (int i = 1; i <= n - 1; i++)
+                {
+                    term += function(a + i * h, 0);
+                }
+                return (function(a, 0) + function(b, 0) + 2 * term) * (h / 2.0);
+            }
+            public static void TestCompositeTrapezoidalRule()
+            {
+                Console.WriteLine($"approx : {NumericalIntegration.CompositeTrapezoidalRule(cos, 1, 1.6, 0.01)}");
             }
         }
 
