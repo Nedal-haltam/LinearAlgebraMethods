@@ -1,0 +1,12 @@
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\bin\Debug\net8.0\Lalib.deps.json
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\bin\Debug\net8.0\Lalib.dll
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\bin\Debug\net8.0\Lalib.pdb
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\obj\Debug\net8.0\Lalib.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\obj\Debug\net8.0\Lalib.AssemblyInfoInputs.cache
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\obj\Debug\net8.0\Lalib.AssemblyInfo.cs
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\obj\Debug\net8.0\Lalib.csproj.CoreCompileInputs.cache
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\obj\Debug\net8.0\Lalib.sourcelink.json
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\obj\Debug\net8.0\Lalib.dll
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\obj\Debug\net8.0\refint\Lalib.dll
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\obj\Debug\net8.0\Lalib.pdb
+D:\GitHub Repos\LinearAlgebraMethods\LinearAlgebraMethods\Lalib\Lalib\obj\Debug\net8.0\ref\Lalib.dll
